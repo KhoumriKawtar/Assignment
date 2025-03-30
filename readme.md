@@ -38,7 +38,7 @@ To execute the tests, navigate to the project's root directory and run the follo
 The test suite is organized as follows:
    # 
    
-      SpriteCloudAssignment/
+      Assignment/
       │
       ├── .venv                   
       ├── keywords/               
