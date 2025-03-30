@@ -1,5 +1,5 @@
 *** Settings ***
-Resource  ../../resources/variables/ui_variables/order_process_variables.robot
+
 Resource  ../../resources/variables/ui_variables/order_process_locators.robot
 Library           SeleniumLibrary
 Library           String
@@ -61,20 +61,16 @@ The user verify the cart
 
 The user click on checkout button
     Click Element  ${checkout_button}
-The user enter the first name
-    [Arguments]  ${FIRST_NAME}
+The user fills in shipping information
+    [Arguments]  ${FIRST_NAME}  ${LAST_NAME}  ${ZIP_CODE}
     Input Text  ${FIRST_NAME_LOCATOR}   ${FIRST_NAME}
-The user enter the last name
-      [Arguments]  ${LAST_NAME}
-       Input Text  ${LAST_NAME_LOCATOR}   ${LAST_NAME}
-The user enter the zip or the postal code
-      [Arguments]  ${ZIP_CODE}
-      Input Text  ${ZIP_CODE_LOCATOR}  ${ZIP_CODE}
-      Click Element  ${CONTINUE_BUTTON_LOCATOR}
-The user is in the Checkout overview page
+    Input Text  ${LAST_NAME_LOCATOR}   ${LAST_NAME}
+    Input Text  ${ZIP_CODE_LOCATOR}  ${ZIP_CODE}
+    Click Element  ${CONTINUE_BUTTON_LOCATOR}
+
+Check if the total price is equal to the items prices
     #Verify that the text of the checkout overview title matches the expected value
     Element Text Should Be  ${CHECKOUT_OVERVIEW_TITLE_LOCATOR}  Checkout: Overview
-Check if the total price is equal to the items prices
     #Get a list of the checkout items prices
     ${items_prices} =    Get WebElements    ${ITEMS_PRICE_LOCATOR}
     #Create a summation variable and initiate it with zero

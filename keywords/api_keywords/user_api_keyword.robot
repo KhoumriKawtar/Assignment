@@ -5,6 +5,7 @@ Library  DateTime
 
 Resource  ../../resources/variables/api_variables/user_api_variables.robot
 Resource  ../../keywords/api_keywords/user_api_keyword.robot
+
 *** Keywords ***
 
 Get the complete file path

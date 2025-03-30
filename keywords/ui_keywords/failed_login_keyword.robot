@@ -3,12 +3,17 @@ Resource  ../../resources/variables/ui_variables/order_process_variables.robot
 Resource  ../../resources/variables/ui_variables/order_process_locators.robot
 Library           SeleniumLibrary
 
+
+
 *** Keywords ***
 
 User is in the login page
   [Arguments]  ${URL}
-       Open Browser    ${URL}    Chrome
-       Maximize Browser Window
+    ${options}=    Evaluate    selenium.webdriver.chrome.options.Options()    modules=selenium
+    Call Method    ${options}    add_argument    --headless
+    Call Method    ${options}    add_argument    --disable-gpu
+    Create WebDriver    Chrome    options=${options}
+    Go To    ${URL}
 
 The user enter the user name
      [Arguments]  ${USER_NAME}

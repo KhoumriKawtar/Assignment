@@ -9,7 +9,7 @@ Library  SeleniumLibrary
 TC01:Login with locked out user
     User is in the login page   ${URL}
     The user enter the user name     ${LOCKEDOUT_USER}
-    The User enter the password     ${Password}
+    The User enter the password     ${PASSWORD}
     The user submmit the login form
     The locked out error message should be displayed
 

@@ -16,10 +16,7 @@ TC01:Valid checkout
     The user add the products to the cart  ${PRODUCT_NUMBER1}   ${PRODUCT_NUMBER2}
     The user verify the cart    ${PRODUCT_NUMBER1}    ${PRODUCT_NUMBER2}
     The user click on checkout button
-    The user enter the first name      ${FIRST_NAME}
-    The user enter the last name      ${LAST_NAME}
-    The user enter the zip or the postal code      ${ZIP_CODE}
-    The user is in the Checkout overview page
+    The user fills in shipping information      ${FIRST_NAME}  ${LAST_NAME}  ${ZIP_CODE}
     Check if the total price is equal to the items prices
     The user click on finish
     The checkout is complete and the cart is empty
