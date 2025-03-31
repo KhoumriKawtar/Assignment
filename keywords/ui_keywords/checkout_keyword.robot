@@ -1,63 +1,53 @@
 *** Settings ***
 
 Resource  ../../resources/variables/ui_variables/order_process_locators.robot
-Library           SeleniumLibrary
+Library         SeleniumLibrary
 Library           String
 *** Keywords ***
 The user is in the home page
     Page should contain Element    ${SWAGLABS_LOCATOR}
 
 The user add the products to the cart
-    [Arguments]  ${PRODUCT_NUMBER1}    ${PRODUCT_NUMBER2}
-    #Get a list of product elements in the home page
-    ${products_list} =  Get WebElements  ${PRODUCT_LOCATOR}
+    [Arguments]  @{USER_PRODUCTS}
 
-    #Loop through the products and click add to cart when the product matches the user input products
-    FOR    ${product}    IN    @{products_list}
-        ${product_title}=    Get Text    ${product}
+    #Loop through the products and click add to cart and verify when the product matches the user input products
+    FOR  ${product}  IN  @{USER_PRODUCTS}
         #Update the locator string for add to cart button based on product title allowing for dynamic targeting for each product
         #The product title is converted to lowercase and spaces are replaced with dashes to create a valid locator
-        ${add_cart_locator}=    Evaluate     "${CART_BUTTONS_LOCATOR}".format("add-to-cart-${product_title.lower().replace(' ', '-')}")
+        ${add_cart_locator}=    Evaluate     "${CART_BUTTONS_LOCATOR}".format("add-to-cart-${product.lower().replace(' ', '-')}")
         #Click add to cart when the product matches the user input products
-        Run Keyword If    '${product_title}' == '${PRODUCT_NUMBER1}'    Click Element    ${add_cart_locator}
-        Run Keyword If    '${product_title}' == '${PRODUCT_NUMBER2}'    Click Element    ${add_cart_locator}
-    END
-
-    #Loop through the products and check if the add to cart button is changed to remove
-    FOR    ${product}    IN    @{products_list}
-        ${product_title}=    Get Text    ${product}
+        Click Element    ${add_cart_locator}
+        #check if the add to cart button is changed to remove
         #Update the locator string for remove button based on product title allowing for dynamic targeting for each product
         #The product title is converted to lowercase and spaces are replaced with dashes to create a valid locator
-        ${remove_cart_locator}=    Evaluate    "${CART_BUTTONS_LOCATOR}".format("remove-${product_title.lower().replace(' ', '-')}")
+        ${remove_cart_locator}=    Evaluate    "${CART_BUTTONS_LOCATOR}".format("remove-${product.lower().replace(' ', '-')}")
         #Verify that the button of the added to cart products are now changed to remove
-        Run Keyword If    '${product_title}' == '${PRODUCT_NUMBER1}'  Element text should be   ${remove_cart_locator}  Remove
-        Run Keyword If    '${product_title}' == '${PRODUCT_NUMBER2}'  Element text should be   ${remove_cart_locator}  Remove
+        Element text should be   ${remove_cart_locator}  Remove
     END
 
 The user verify the cart
-   [Arguments]  ${PRODUCT_NUMBER1}    ${PRODUCT_NUMBER2}
+   [Arguments]  @{USER_PRODUCTS}
    #Click on the shopping cart icon to open the cart
    Click Element  ${SHOPPING_CART_ICON}
    #Get a list of item elements in the shopping cart
    ${cart_Items} =  Get WebElements  ${INVENTORY_ITEM_NAME}
-   #Create variables and initiate them with False to check the presence of the user input products in the cart
-   ${product1_found} =    Set Variable    False
-   ${product2_found} =    Set Variable    False
-   #Loop through the items in the cart to check for the products
-   FOR    ${item}    IN    @{cart_items}
-        ${item_name}=    Get Text    ${item}
-        #Check if the current item matches the first product
-        IF  '${item_name}' == '${PRODUCT_NUMBER1}'
-            ${product1_found} =    Set Variable    True
-        END
-        #Check if the current item matches the second product
-        IF  '${item_name}' == '${PRODUCT_NUMBER2}'
-            ${product2_found} =    Set Variable    True
-        END
+
+   ${items_count}=  Set Variable  0
+   ${products_count}  Get Length  ${USER_PRODUCTS}
+
+   #Loop through the products and match each product with the items in cart
+   FOR   ${product}   IN    @{USER_PRODUCTS}
+      #Loop through the items in the cart to check for the products
+       FOR    ${item}    IN    @{cart_items}
+            ${item_name}=    Get Text    ${item}
+            #Check if the current item matches the product
+             IF  '${product}' == '${item_name}'
+                ${items_count} =  Evaluate  ${items_count} + 1
+             END
+       END
    END
-   #Verify that the products were found in the cart
-   Should Be True    ${product1_found}
-   Should Be True    ${product2_found}
+   #Verify that the total number of products matched with cart is the same as the products count
+   Should Be Equal As Numbers   ${items_count}  ${products_count}
 
 The user click on checkout button
     Click Element  ${checkout_button}

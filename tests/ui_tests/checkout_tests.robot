@@ -13,8 +13,8 @@ TC01:Valid checkout
     The User enter the password      ${PASSWORD}
     The user submmit the login form
     The user is in the home page
-    The user add the products to the cart  ${PRODUCT_NUMBER1}   ${PRODUCT_NUMBER2}
-    The user verify the cart    ${PRODUCT_NUMBER1}    ${PRODUCT_NUMBER2}
+    The user add the products to the cart  @{USER_PRODUCTS}
+    The user verify the cart    @{USER_PRODUCTS}
     The user click on checkout button
     The user fills in shipping information      ${FIRST_NAME}  ${LAST_NAME}  ${ZIP_CODE}
     Check if the total price is equal to the items prices

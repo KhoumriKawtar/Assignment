@@ -12,8 +12,7 @@ ${LOCKEDOUT_USER}           locked_out_user
 ${LOCKEDOUT_MESSAGE}        Epic sadface: Sorry, this user has been locked out.
 ##-----------------Checkout Variables-------------------##
 
-${PRODUCT_NUMBER1}        Sauce Labs Bike Light
-${PRODUCT_NUMBER2}        Sauce Labs Backpack
+@{USER_PRODUCTS}       Sauce Labs Bike Light    Sauce Labs Backpack
 ${FIRST_NAME}       Kawtar
 ${LAST_NAME}        Khoumri
 ${ZIP_CODE}         X16PX
