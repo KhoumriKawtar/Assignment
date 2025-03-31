@@ -1,0 +1,62 @@
+name: Run Robot Framework Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.14.0-alpha.6'  
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install Google Chrome
+      run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+    - name: Install ChromeDriver
+      run: |
+               # Get the full installed Google Chrome version, including the build number
+               CHROME_VERSION=$(google-chrome --version | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+')
+               echo "Chrome Version: $CHROME_VERSION"
+         
+               # Construct the ChromeDriver URL based on the full Chrome version
+               CHROMEDRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip"
+         
+               echo "Downloading ChromeDriver from: $CHROMEDRIVER_URL"
+         
+               # Download ChromeDriver
+               curl -O $CHROMEDRIVER_URL
+         
+               # Unzip and move the driver to /usr/local/bin
+               unzip chromedriver-linux64.zip
+               sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+               sudo chmod +x /usr/local/bin/chromedriver
+               
+               
+    - name: Verify ChromeDriver
+      run: |
+        echo "ChromeDriver Path: $(which chromedriver)"
+        chromedriver --version
+    - name: Run Robot Framework tests
+      run: |
+        # Run API tests
+        robot --outputdir results/api_result tests/api_tests/
+        # Run UI tests
+         robot --outputdir results/ui_result tests/ui_tests/
